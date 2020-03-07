@@ -1,3 +1,4 @@
+
 defmodule Poker do
     def deal(list) do
         hands = dealHands(list, [], [], 1)
@@ -11,6 +12,9 @@ defmodule Poker do
         h2Score = getScore(hand2)
         h1Max = getMaxRank(Enum.sort(getRanks(hand1, [])))
         h2Max = getMaxRank(Enum.sort(getRanks(hand2, [])))
+        h1Ranks = Enum.sort(getRanks(hand1, []))
+        h2Ranks = Enum.sort(getRanks(hand2, []))
+
         cond do 
             h1Score > h2Score -> 
                 hand1
@@ -22,8 +26,14 @@ defmodule Poker do
                 tieBreakByThrees(hand1, hand2)
             h1Score == 3 -> 
                 tieBreakByPair(hand1, hand2)
-            true -> 
-                tieBreakByRank(hand1, hand2)
+            h1Score == h2Score ->
+                cond do
+                    h1Ranks == h2Ranks ->
+                        tieBreakFlush(hand1, hand2)
+                    true ->
+                        tieBreakByRank(hand1, hand2)
+                end
+            true ->
         end
     end
 
